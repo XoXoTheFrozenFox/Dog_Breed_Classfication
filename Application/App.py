@@ -21,7 +21,7 @@ model = load_model(model_path)
 img_size = (331, 331, 3)
 
 # Define the classes (you should have this list from your training process)
-classes = classes = [
+classes = [
     'affenpinscher', 'afghan_hound', 'african_hunting_dog', 'airedale',
     'american_staffordshire_terrier', 'appenzeller', 'australian_terrier',
     'basenji', 'basset', 'beagle', 'bedlington_terrier', 'bernese_mountain_dog',
@@ -91,24 +91,33 @@ class DogBreedClassifierApp:
     def __init__(self, master):
         self.master = master
         master.title("Dog Breed Classifier")
+        
+        # Set the window size
+        master.geometry("800x600")
+        master.configure(bg='black')  # Set background color to black
 
-        self.label = Label(master, text="Select an image to predict its breed")
-        self.label.pack()
+        # Create and pack widgets with `pack` manager
+        self.label = Label(master, text="Select an image to predict the dog breed", fg='white', bg='black', font=("Arial", 16))
+        self.label.pack(pady=20)
 
-        self.image_label = Label(master)
-        self.image_label.pack()
+        self.image_label = Label(master, bg='black')
+        self.image_label.pack(pady=10)
 
-        self.predict_button = Button(master, text="Select Image", command=self.select_image)
+        self.result_label = Label(master, text="", fg='white', bg='black', font=("Arial", 16))
+        self.result_label.pack(pady=10)
+
+        # Create a frame to hold the button at the bottom
+        self.bottom_frame = tk.Frame(master, bg='black')
+        self.bottom_frame.pack(side=tk.BOTTOM, fill=tk.X, padx=20, pady=20)
+
+        self.predict_button = Button(self.bottom_frame, text="Select Image", command=self.select_image, font=("Arial", 14))
         self.predict_button.pack()
-
-        self.result_label = Label(master, text="")
-        self.result_label.pack()
 
     def select_image(self):
         file_path = filedialog.askopenfilename()
         if file_path:
             img = Image.open(file_path)
-            img = img.resize((200, 200), Image.LANCZOS)
+            img = img.resize((300, 300), Image.LANCZOS)  # Resize image to fit the window
             img = ImageTk.PhotoImage(img)
             self.image_label.config(image=img)
             self.image_label.image = img
